@@ -31,7 +31,6 @@ app.get("/", (req, res) => {
     .readdirSync(path.join(__dirname, "src", "images"))
     .filter((file) => file.endsWith("jpg"))
     .sort(() => 0.5 - Math.random());
-  console.log(images);
   res.render("index.ejs", { images });
 });
 app.get("/upload", (req, res) => {
