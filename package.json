@@ -5,7 +5,8 @@
     "multer": "^1.4.4"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "node app",
+    "publish": "npm install"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
