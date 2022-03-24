@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gabi's Wrld!</title>
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/upload.css" />
+    <link rel="stylesheet" href="css/header.css" />
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <header>
+      <h1>Mundinho da Babi</h1>
+      <a href="/">
+        <img src="/images/other/coracaum.png" alt="Coraçãozin" />
+      </a>
+    </header>
+    <main>
+      <div class="form-wrapper">
+        <form>
+          <div>
+            <label for="image">
+              <p id="image-text">Selecione uma imagem</p>
+              <img
+                id="default-image"
+                src="/images/other/image_icon.png"
+                alt="image"
+              />
+              <img
+                id="blob-image"
+                src="blob:http://localhost/538d2f45-83c1-488a-9ef7-5f36050bda68"
+                alt="blob-image"
+              />
+            </label>
+            <input id="image" name="image" type="file" accept="image/*" />
+          </div>
+
+          <button id="btn" type="submit" disabled>Enviar</button>
+        </form>
+      </div>
+    </main>
+  </body>
+  <script>
+    const form = document.querySelector("form");
+    const input = document.querySelector("input");
+    const button = document.querySelector("#btn");
+    const imageText = document.querySelector("#image-text");
+    const defaultImage = document.querySelector("#default-image");
+    const blobImg = document.querySelector("#blob-image");
+
+    input.addEventListener("change", (ev) => {
+      button.removeAttribute("disabled");
+      imageText.setAttribute("class", "none");
+      defaultImage.setAttribute("class", "none");
+
+      const value = input.files[0];
+      const blobURL = URL.createObjectURL(value);
+      blobImg.setAttribute("src", blobURL);
+      blobImg.setAttribute("style", "display:block");
+    });
+
+    form.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+
+      const formData = new FormData();
+      const value = input.files[0];
+      formData.append("image", value);
+
+      $.ajax({
+        url: "upload",
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          window.location.href = `${window.origin}`;
+        },
+        error: function (jqXHR, textStatus, errorMessage) {
+          console.log(errorMessage); // Optional
+        },
+      });
+    });
+  </script>
+</html>

@@ -1,0 +1,17 @@
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  background-color: #e2b4bd;
+  font: 500 1rem Arial, Helvetica, sans-serif;
+  min-height: 80px;
+}
+header h1 {
+  color: #1c1c1c;
+}
+
+header img {
+  width: 100%;
+  max-width: 70px;
+}

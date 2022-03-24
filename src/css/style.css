@@ -1,0 +1,26 @@
+main {
+  max-width: 1280px;
+  margin: 0 auto;
+  margin-top: 20px;
+
+  display: grid;
+  grid-gap: 16px;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 768px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+}
+
+main .image {
+  max-width: 360px;
+  display: flex;
+  align-items: center;
+}
+main .image img {
+  width: 100%;
+}
+
+
