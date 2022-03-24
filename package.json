@@ -7,9 +7,6 @@
   "scripts": {
     "start": "node app.js"
   },
-  "engines": {
-    "node": "16.x"
-  },
   "devDependencies": {
     "nodemon": "^2.0.15"
   }
