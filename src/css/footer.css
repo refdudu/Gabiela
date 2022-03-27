@@ -1,6 +1,6 @@
 footer {
   display: flex;
-  height: 200px;
+  max-height: 200px;
   background-color: #e2b4bd;
   margin-top: 30px;
   padding: 30px;

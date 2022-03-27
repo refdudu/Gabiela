@@ -25,8 +25,11 @@
     </header>
     <main>
       <% for(var i=0; i < images.length; i++){%>
-      <div class="image">
-        <img src="/images/<%=images[i]%>" alt="Gata" />
+      <div class="image-container">
+        <div class="image">
+          <img src="/images/<%=images[i]%>" alt="Gata" />
+          <div class="delete" onclick="deleteImage(this)">x</div>
+        </div>
       </div>
       <% } %>
     </main>
@@ -53,7 +56,5 @@
       </div>
     </footer>
   </body>
-  <script>
-    const main = document.querySelect("main");
-  </script>
+  <script src="/scripts/index.js" ></script>
 </html>

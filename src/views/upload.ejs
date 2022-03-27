@@ -24,23 +24,17 @@
     <main>
       <div class="form-wrapper">
         <form>
-        <div>
+          <div id="wrapper">
             <label for="image">
-              <p id="image-text">Selecione uma imagem</p>
+              <p id="image-text">Selecione as imagem</p>
               <img
                 id="default-image"
                 src="/images/other/image_icon.png"
                 alt="image"
               />
-              <img
-                id="blob-image"
-                src="blob:http://localhost/538d2f45-83c1-488a-9ef7-5f36050bda68"
-                alt="blob-image"
-              />
             </label>
             <input id="image" name="image" type="file" accept="image/*" />
           </div>
-
           <button id="btn" type="submit" disabled>Enviar</button>
         </form>
       </div>
@@ -48,30 +42,104 @@
   </body>
   <script>
     const form = document.querySelector("form");
-    const input = document.querySelector("input");
     const button = document.querySelector("#btn");
-    const imageText = document.querySelector("#image-text");
-    const defaultImage = document.querySelector("#default-image");
-    const blobImg = document.querySelector("#blob-image");
+    const wrapper = document.querySelector("#wrapper");
 
-    input.addEventListener("change", (ev) => {
-      button.removeAttribute("disabled");
-      imageText.setAttribute("class", "none");
-      defaultImage.setAttribute("class", "none");
+    const dataImageValues = [];
+    const inputs = document.querySelectorAll("input");
+    const lastInput = inputs[inputs.length - 1];
 
-      const value = input.files[0];
-      const blobURL = URL.createObjectURL(value);
-      blobImg.setAttribute("src", blobURL);
-      blobImg.setAttribute("style", "display:block");
+    const setAttributes = (element, attr) => {
+      const attributes = Object(attr);
+      const entries = Object.entries(attributes);
+      entries.map((value, index) => {
+        const attr_key = value[0];
+        const attr_value = value[1];
+        element.setAttribute(attr_key, attr_value);
+      });
+      return element;
+    };
+
+    const createNewElement = (type, attr) => {
+      const element = document.createElement(type);
+      const finalElement = setAttributes(element, attr);
+      return finalElement;
+    };
+
+    const newImage = (blobURL) => {
+      const attr = {
+        src: blobURL,
+        style: "display:block",
+        class: "blob-image",
+      };
+      const element = createNewElement("img", attr);
+      return element;
+    };
+
+    const newImageDeleteButton = () => {
+      const attr = {
+        class: "delete",
+        onClick: "removeImage(this)",
+        id: `delete-${dataImageValues.length - 1}`,
+      };
+      const element = createNewElement("div", attr);
+      element.innerHTML = "x";
+      return element;
+    };
+
+    const newImageContainer = (blobURL) => {
+      const attr = { class: "blob-image-container" };
+      const imageContainer = createNewElement("div", attr);
+      const image = newImage(blobURL);
+      const deleteButton = newImageDeleteButton();
+      imageContainer.appendChild(image);
+      imageContainer.appendChild(deleteButton);
+      return imageContainer;
+    };
+
+    const handleButton = () => {
+      let totalImages = dataImageValues.filter(
+        (image) => image !== null
+      ).length;
+
+      console.log(totalImages);
+      if (totalImages > 0) {
+        button.removeAttribute("disabled");
+      } else {
+        button.setAttribute("disabled", "disabled");
+      }
+    };
+
+    const removeImage = (element) => {
+      const imageContainer = element.parentNode;
+      const number = element.getAttribute("id").replace("delete-", "");
+      const index = parseInt(number);
+
+      imageContainer.remove();
+      dataImageValues[index] = null;
+
+      handleButton();
+    };
+
+    lastInput.addEventListener("change", (ev) => {
+      dataImageValues.push(lastInput.files[0]);
+      const lastDataImageValue = dataImageValues[dataImageValues.length - 1];
+
+      const blobURL = URL.createObjectURL(lastDataImageValue);
+      const imageContainer = newImageContainer(blobURL);
+
+      wrapper.appendChild(imageContainer);
+      handleButton();
     });
 
     form.addEventListener("submit", async (ev) => {
       ev.preventDefault();
 
       const formData = new FormData();
-      const value = input.files[0];
-      formData.append("image", value);
-
+      const data = dataImageValues.filter((value) => value !== null);
+      const value = data.map((value) => {
+        formData.append("image", value);
+      });
       $.ajax({
         url: "upload",
         type: "POST",
